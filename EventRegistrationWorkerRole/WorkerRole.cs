@@ -55,7 +55,7 @@ namespace EventRegistrationWorkerRole
 
             var binding = new BasicHttpBinding(BasicHttpSecurityMode.None);
             var externalEndPoint = RoleEnvironment.CurrentRoleInstance.InstanceEndpoints["PublicEndpoint"];
-            string endpoint = String.Format("net.tcp://{0}/LoanCalculator",
+            string endpoint = String.Format("http://{0}/LoanCalculator",
                 externalEndPoint.IPEndpoint);
 
             _serviceHost.AddServiceEndpoint(typeof(IEventRegistrator), binding, endpoint);
