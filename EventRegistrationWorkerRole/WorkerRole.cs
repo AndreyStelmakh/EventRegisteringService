@@ -1,23 +1,7 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.WindowsAzure;
-using Microsoft.WindowsAzure.Diagnostics;
-using Microsoft.WindowsAzure.ServiceRuntime;
-using Microsoft.WindowsAzure.Storage;
-
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Net;
-using System.Threading;
-using Microsoft.WindowsAzure;
-using Microsoft.WindowsAzure.Diagnostics;
 using Microsoft.WindowsAzure.ServiceRuntime;
 //using Microsoft.WindowsAzure.StorageClient;
 using System.ServiceModel;
@@ -54,11 +38,13 @@ namespace EventRegistrationWorkerRole
             _serviceHost = new ServiceHost(typeof(EventRegistratorImplementation));
 
             var binding = new BasicHttpBinding(BasicHttpSecurityMode.None);
-            var externalEndPoint = RoleEnvironment.CurrentRoleInstance.InstanceEndpoints["PublicEndpoint"];
-            string endpoint = String.Format("http://{0}/LoanCalculator",
-                externalEndPoint.IPEndpoint);
+            var internalEndpoint
+                = RoleEnvironment
+                    .CurrentRoleInstance
+                    .InstanceEndpoints["PublicEndpoint"];
+            string address = string.Format("http://{0}/", internalEndpoint.IPEndpoint);
 
-            _serviceHost.AddServiceEndpoint(typeof(IEventRegistrator), binding, endpoint);
+            _serviceHost.AddServiceEndpoint(typeof(IEventRegistrator), binding, address);
 
             _serviceHost.Open();
         }
